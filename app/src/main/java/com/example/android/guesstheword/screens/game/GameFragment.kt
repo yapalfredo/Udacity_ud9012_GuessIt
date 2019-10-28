@@ -17,6 +17,7 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,7 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
  */
 class GameFragment : Fragment() {
 
-    private lateinit var viewModel : GameViewModel
+    private lateinit var viewModel: GameViewModel
     private lateinit var binding: GameFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +49,7 @@ class GameFragment : Fragment() {
                 false
         )
 
-        Log.i("GameFragment","Called ViewModelProviders.of !!!!!")
+        Log.i("GameFragment", "Called ViewModelProviders.of !!!!!")
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
         //Event listeners
@@ -69,9 +70,13 @@ class GameFragment : Fragment() {
             binding.wordText.text = it.toString()
         })
 
+        viewModel.currentTime.observe(this, Observer {
+            binding.timerText.text = DateUtils.formatElapsedTime(it)
+        })
+
         viewModel.eventGameFinished.observe(this, Observer {
             //If game has finished
-            if (it){
+            if (it) {
                 gameFinished()
                 viewModel.onGameFinishComplete()
             }

@@ -1,5 +1,7 @@
 package com.example.android.guesstheword.screens.game
 
+import android.os.CountDownTimer
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,6 +9,21 @@ import androidx.lifecycle.ViewModel
 
 //extends ViewModel
 class GameViewModel : ViewModel() {
+
+    companion object {
+        //These will represent different important times in the game, such as the duration of the game
+
+        //This is when the game is finished
+        private const val DONE = 0L
+
+        //This is the number in milliseconds in a second
+        private const val ONE_SECOND = 1000L
+
+        //This is the total duration of the game
+        private const val COUNTDOWN_TIME = 60000L
+    }
+
+    private val timer: CountDownTimer
 
 
     // -------------------  Encapsulations required ------------------------
@@ -21,6 +38,11 @@ class GameViewModel : ViewModel() {
     private val _score = MutableLiveData<Int>()   //internal
     val score: LiveData<Int>                      //external
         get() = _score
+
+    // The current time
+    private val _currentTime = MutableLiveData<Long>()
+    val currentTime: LiveData<Long>
+        get() = _currentTime
 
     private val _eventGameFinished = MutableLiveData<Boolean>()
     val eventGameFinished: LiveData<Boolean>
@@ -67,10 +89,10 @@ class GameViewModel : ViewModel() {
     private fun nextWord() {
         //Select and remove a word from the list
         if (wordList.isEmpty()) {
-            _eventGameFinished.value = true
-        } else {
-            _word.value = wordList.removeAt(0)
+            resetList()
         }
+        _word.value = wordList.removeAt(0)
+
     }
 
     /** Methods for buttons presses **/
@@ -91,10 +113,23 @@ class GameViewModel : ViewModel() {
         nextWord()
         _score.value = 0
         _eventGameFinished.value = false
+
+        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
+            override fun onTick(p0: Long) {
+                _currentTime.value = p0 / ONE_SECOND
+            }
+
+            override fun onFinish() {
+                _currentTime.value = DONE
+                _eventGameFinished.value = true
+            }
+        }
+        timer.start()
     }
 
     override fun onCleared() {
         super.onCleared()
+        timer.cancel()
 
         Log.i("GameViewModel", "GameViewModel destroyed!!!")
     }
