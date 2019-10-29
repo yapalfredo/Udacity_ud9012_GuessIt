@@ -50,7 +50,7 @@ class ScoreFragment : Fragment() {
                 container,
                 false
         )
-        
+
         // Get args using by navArgs property delegate
        // The ViewModelFactory is used for recreating the ViewModel object
         viewModelFactory = ScoreViewModelFactory(ScoreFragmentArgs.fromBundle(arguments!!).score)

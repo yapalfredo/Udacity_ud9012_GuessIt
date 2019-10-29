@@ -73,11 +73,11 @@ class GameFragment : Fragment() {
 //            binding.wordText.text = it.toString()
 //        })
 
- */
-
         viewModel.currentTime.observe(this, Observer {
             binding.timerText.text = DateUtils.formatElapsedTime(it)
         })
+
+ */
 
         viewModel.eventGameFinished.observe(this, Observer {
             //If game has finished

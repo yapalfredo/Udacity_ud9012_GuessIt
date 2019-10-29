@@ -5,6 +5,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 //extends ViewModel
@@ -43,6 +44,10 @@ class GameViewModel : ViewModel() {
     private val _currentTime = MutableLiveData<Long>()
     val currentTime: LiveData<Long>
         get() = _currentTime
+
+    val currentTimeString = Transformations.map(currentTime, {
+        DateUtils.formatElapsedTime(it)
+    })
 
     private val _eventGameFinished = MutableLiveData<Boolean>()
     val eventGameFinished: LiveData<Boolean>
