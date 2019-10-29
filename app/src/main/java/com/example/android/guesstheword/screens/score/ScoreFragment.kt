@@ -51,19 +51,18 @@ class ScoreFragment : Fragment() {
                 false
         )
 
-        binding.playAgainButton.setOnClickListener {
-            viewModel.onPlayAgain()
-        }
+//        binding.playAgainButton.setOnClickListener {
+//            viewModel.onPlayAgain()
+//        }
 
         // Get args using by navArgs property delegate
        // The ViewModelFactory is used for recreating the ViewModel object
         viewModelFactory = ScoreViewModelFactory(ScoreFragmentArgs.fromBundle(arguments!!).score)
-
         //What this does is it will recreate the ViewModel based on the factory design pattern
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ScoreViewModel::class.java)
 
-
-        // changed ViewModel
+        //DataBinding
+        binding.scoreViewModel = viewModel
 
         // Added observers
         viewModel.score.observe(this, Observer {
